@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import WatchlistTable from './components/WatchlistTable';
+import AddMovieForm from './components/AddMovieForm';
 
 function App() {
   const [movies, setMovies] = useState([]);
@@ -39,9 +40,11 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <h1>CineFile Dashboard</h1>
-      {loading && <p>Loading your movies...</p>}
+    <div className="App" style={{ maxWidth: '800px', margin: '0 auto', padding: '20px' }}>
+      <h1>CineFile</h1>
+      <AddMovieForm onMovieAdded={fetchWatchlist} />
+      
+      {loading && <p>Loading...</p>}
       {error && <p style={{ color: 'red' }}>{error}</p>}
       
       {!loading && (
