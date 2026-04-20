@@ -1,15 +1,28 @@
 const mongoose = require('mongoose');
 
 const watchlistSchema = new mongoose.Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  movie: { type: mongoose.Schema.Types.ObjectId, ref: 'Movie', required: true },
+  user: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'User', 
+    required: true 
+  },
+  movie: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'Movie', 
+    required: true 
+  },
   rating: { 
     type: Number, 
-    required: true, 
     min: 1, 
-    max: 10
+    max: 10, 
+    required: true 
   },
-  comment: { type: String, required: true }
+  status: { 
+    type: String, 
+    enum: ['Plan to Watch', 'Watching', 'Completed'], 
+    default: 'Plan to Watch' 
+  },
+  comment: { type: String }
 });
 
 module.exports = mongoose.model('Watchlist', watchlistSchema);
