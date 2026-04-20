@@ -32,3 +32,21 @@ exports.removeFromWatchlist = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
+// GET average rating of the user's watchlist
+exports.getWatchlistStats = async (req, res) => {
+  try {
+    const stats = await Watchlist.aggregate([
+      {
+        $group: {
+          _id: null,
+          avgRating: { $avg: "$rating" },
+          totalMovies: { $sum: 1 }
+        }
+      }
+    ]);
+    res.status(200).json(stats[0] || { avgRating: 0, totalMovies: 0 });
+  } catch (error) {
+    res.status(500).json({ message: "Error calculating stats", error: error.message });
+  }
+};
