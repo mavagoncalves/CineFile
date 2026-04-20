@@ -18,7 +18,7 @@ exports.addToWatchlist = async (req, res) => {
     const savedItem = await newItem.save();
     res.status(201).json(savedItem);
   } catch (error) {
-    res.status(400).json({ message: "Validation failed", error: error.message }); [cite: 44]
+    res.status(400).json({ message: "Validation failed", error: error.message });
   }
 };
 
