@@ -1,0 +1,11 @@
+{
+  "name": "cinefile",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix frontend\" \"npm run dev --prefix backend\""
+  },
+  "dependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
