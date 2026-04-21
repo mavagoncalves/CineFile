@@ -10,6 +10,8 @@ app.use(express.json());
 app.use(cors());
 
 app.use('/api/watchlist', require('./routes/watchlistRoutes'));
+app.use('/api/movies', require('./routes/movieRoutes'));
+app.use('/api/users', require('./routes/userRoutes'));
 
 // Database Connection
 mongoose.connect(process.env.MONGO_URI)
