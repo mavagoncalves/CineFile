@@ -4,7 +4,7 @@ const { getWatchlist, addToWatchlist, removeFromWatchlist, getWatchlistStats } =
 
 router.get('/', getWatchlist);
 router.post('/', addToWatchlist);
-router.delete('/:id', removeFromWatchlist);
 router.get('/stats', getWatchlistStats);
+router.delete('/:id', removeFromWatchlist);
 
 module.exports = router;
