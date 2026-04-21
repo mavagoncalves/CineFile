@@ -19,10 +19,11 @@ const WatchlistTable = ({ movies, onDelete }) => {
           ) : (
             movies.map((item) => (
               <tr key={item._id} style={{ borderBottom: '1px solid #eee' }}>
-                {/* We use item.movie?.title because of the .populate() in backend */}
                 <td>{item.movie?.title || "Unknown Title"}</td>
                 <td>{item.rating}/10</td>
-                <td>{item.status}</td>
+                <td style={{color: item.status === 'Completed' ? '#46d369' : '#ffad1f', fontWeight: 'bold'}}>
+                    {item.status}
+                </td>
                 <td>
                   <button 
                     onClick={() => onDelete(item._id)}
