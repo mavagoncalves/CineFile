@@ -44,6 +44,23 @@ exports.getWatchlist = async (req, res) => {
   }
 };
 
+// Get a specific user's watchlist
+exports.getWatchlistByUser = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        
+        const userList = await Watchlist.find({ user: userId }).populate('movie');
+        
+        if (!userList || userList.length === 0) {
+            return res.status(404).json({ message: "No watchlist found for this user." });
+        }
+        
+        res.status(200).json(userList);
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
 // DELETE an item
 exports.removeFromWatchlist = async (req, res) => {
   try {
@@ -70,5 +87,21 @@ exports.getWatchlistStats = async (req, res) => {
     res.status(200).json(stats[0] || { avgRating: 0, totalMovies: 0 });
   } catch (error) {
     res.status(500).json({ message: "Error calculating stats", error: error.message });
+  }
+};
+
+// Update watchlist item 
+exports.updateWatchlistItem = async (req, res) => {
+  try {
+    const updatedItem = await Watchlist.findByIdAndUpdate(
+      req.params.id, 
+      req.body, 
+      { new: true, runValidators: true } //mongoose validation
+    ).populate('movie');
+
+    if (!updatedItem) return res.status(404).json({ message: "Item not found" });
+    res.status(200).json(updatedItem);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
   }
 };

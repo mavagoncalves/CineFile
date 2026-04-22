@@ -41,6 +41,20 @@ function App() {
     }
   };
 
+  const handleUpdateRating = async (id) => {
+    const newRating = prompt("Enter new rating (1-10):");
+    if (!newRating || isNaN(newRating)) return;
+
+    try {
+        await axios.put(`http://localhost:5000/api/watchlist/${id}`, {
+            rating: Number(newRating)
+        });
+        fetchWatchlist(); // Auto-refresh the list after update 
+    } catch (err) {
+        alert("Failed to update rating");
+    }
+};
+
   return (
     <div className="App" style={{ maxWidth: '800px', margin: '0 auto', padding: '20px' }}>
       <h1>CineFile</h1>
