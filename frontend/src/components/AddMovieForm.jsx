@@ -3,7 +3,9 @@ import axios from 'axios';
 
 const AddMovieForm = ({ onMovieAdded }) => {
   const [formData, setFormData] = useState({
-    movie: '', // This needs to be an ObjectID from your Movie collection
+    title: '',
+    director: '',
+    genre: '',
     rating: 5,
     comment: '',
     status: 'Plan to Watch'
@@ -12,30 +14,53 @@ const AddMovieForm = ({ onMovieAdded }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // IMPORTANT: You must include a 'user' ID here for the backend to accept it
-      const payload = {
+      // backend handles the ID lookup
+      await axios.post('http://localhost:5000/api/watchlist', {
         ...formData,
-        user: "PASTE_YOUR_USER_ID_HERE" // Put the ID you got from /api/users
-      };
+        userId: "69e773f9dba1e6145d3fd694"
+      });
 
-      await axios.post('http://localhost:5000/api/watchlist', payload);
-      onMovieAdded(); 
-      setFormData({ movie: '', rating: 5, comment: '', status: 'Plan to Watch' });
+      onMovieAdded();
+      
+      // Reset form
+      setFormData({ 
+        title: '', 
+        director: '', 
+        rating: 5, 
+        comment: '', 
+        status: 'Plan to Watch' 
+      });
     } catch (err) {
       console.error(err);
-      alert("Validation Error: Make sure you are using a valid Movie ID!");
+      alert("Error adding movie. Check your console!");
     }
   };
 
   return (
     <form className="add-movie-form" onSubmit={handleSubmit}>
-      <h3 style={{ gridColumn: '1 / -1' }}>Add to CineFile</h3>
+      <h3 style={{ gridColumn: '1 / -1', color: 'var(--primary)' }}>Add to Your Watchlist</h3>
       
       <input 
         type="text" 
-        placeholder="Paste Movie ObjectID" 
-        value={formData.movie} 
-        onChange={(e) => setFormData({...formData, movie: e.target.value})} 
+        placeholder="Movie Title" 
+        value={formData.title} 
+        onChange={(e) => setFormData({...formData, title: e.target.value})} 
+        required 
+      />
+
+      <input 
+        type="text" 
+        placeholder="Director" 
+        value={formData.director} 
+        onChange={(e) => setFormData({...formData, director: e.target.value})} 
+        required 
+      />
+
+      <input 
+        type="text" 
+        placeholder="Genre (e.g., Sci-Fi, Action)" 
+        value={formData.genre} 
+        onChange={(e) => setFormData({...formData, genre: e.target.value})} 
         required 
       />
 
@@ -60,7 +85,7 @@ const AddMovieForm = ({ onMovieAdded }) => {
         type="text" 
         placeholder="Comment..." 
         value={formData.comment} 
-        onChange={(e) => setFormData({...formData, comment: e.target.value})} 
+        onChange={(e) => setFormData({...formData, comment: e.target.value})}
       />
 
       <button type="submit">Add Movie</button>

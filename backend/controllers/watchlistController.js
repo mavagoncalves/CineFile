@@ -1,4 +1,37 @@
 const Watchlist = require('../models/Watchlist');
+const Movie = require('../models/Movie');
+
+// Adds movie to watchlist
+exports.createWatchlistItem = async (req, res) => {
+    try {
+        const { title, director, rating, comment, genre, status, userId } = req.body;
+
+        // Check if the movie already exists in your 'movies' collection
+        let movie = await Movie.findOne({ title: new RegExp(`^${title}$`, 'i') });
+
+        // If it doesn't exist, create it in the library first
+        if (!movie) {
+            movie = await Movie.create({ title, director, genre});
+        }
+
+        // create the watchlist entry using the Movie's ID
+        const newItem = await Watchlist.create({
+            user: userId || "69e773f9dba1e6145d3fd694",
+            movie: movie._id,
+            rating,
+            comment,
+            status: status || 'Plan to Watch'
+        });
+
+        // Send back the new item
+        const populatedItem = await Watchlist.findById(newItem._id).populate('movie');
+        
+        res.status(201).json(populatedItem);
+    } catch (error) {
+        console.error("Create Error:", error);
+        res.status(400).json({ message: "Failed to add movie", error: error.message });
+    }
+};
 
 // GET all items in a user's watchlist
 exports.getWatchlist = async (req, res) => {
@@ -8,17 +41,6 @@ exports.getWatchlist = async (req, res) => {
     res.status(200).json(list);
   } catch (error) {
     res.status(500).json({ message: "Error fetching watchlist", error: error.message });
-  }
-};
-
-// POST a new movie to the watchlist
-exports.addToWatchlist = async (req, res) => {
-  try {
-    const newItem = new Watchlist(req.body);
-    const savedItem = await newItem.save();
-    res.status(201).json(savedItem);
-  } catch (error) {
-    res.status(400).json({ message: "Validation failed", error: error.message });
   }
 };
 

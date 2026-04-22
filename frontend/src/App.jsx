@@ -3,6 +3,7 @@ import axios from 'axios';
 import WatchlistTable from './components/WatchlistTable';
 import AddMovieForm from './components/AddMovieForm';
 import WatchlistStats from './components/WatchlistStats';
+import './App.css';
 
 function App() {
   const [movies, setMovies] = useState([]);
