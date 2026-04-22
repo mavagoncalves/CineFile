@@ -4,7 +4,7 @@ const Movie = require('../models/Movie');
 // Adds movie to watchlist
 exports.createWatchlistItem = async (req, res) => {
     try {
-        const { title, director, rating, comment, genre, status, userId } = req.body;
+        const { title, director, rating, comment, genre, status, userId, playlistName } = req.body;
 
         // Check if the movie already exists in your 'movies' collection
         let movie = await Movie.findOne({ title: new RegExp(`^${title}$`, 'i') });
@@ -20,7 +20,8 @@ exports.createWatchlistItem = async (req, res) => {
             movie: movie._id,
             rating,
             comment,
-            status: status || 'Plan to Watch'
+            status: status || 'Plan to Watch',
+            playlistName: playlistName || 'My Favorites'
         });
 
         // Send back the new item

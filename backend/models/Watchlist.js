@@ -22,7 +22,8 @@ const watchlistSchema = new mongoose.Schema({
     enum: ['Plan to Watch', 'Watching', 'Completed'], 
     default: 'Plan to Watch' 
   },
-  comment: { type: String }
+  comment: { type: String },
+  playlistName: { type: String, required: true, default: 'My Favorites' }
 });
 
 module.exports = mongoose.model('Watchlist', watchlistSchema);

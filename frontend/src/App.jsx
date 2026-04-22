@@ -11,6 +11,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedGenre, setSelectedGenre] = useState('All');
+  const [enteredApp, setEnteredApp] = useState(false);
 
 
   const fetchWatchlist = async () => {
@@ -62,6 +63,23 @@ function App() {
         alert("Failed to update rating");
     }
 };
+
+if (!enteredApp) {
+    return (
+      <div className="landing-screen">
+        <div className="landing-content">
+          <h1 className="landing-title">CineFile</h1>
+          <p className="landing-subtitle">Your personalized cinematic universe.</p>
+          <p className="landing-description">
+            Create custom watchlists, track your favorite directors, and curate your ultimate movie collection.
+          </p>
+          <button className="enter-btn" onClick={() => setEnteredApp(true)}>
+            Enter Your Dashboard
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="App">

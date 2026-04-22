@@ -8,7 +8,8 @@ const AddMovieForm = ({ onMovieAdded }) => {
     genre: '',
     rating: 5,
     comment: '',
-    status: 'Plan to Watch'
+    status: 'Plan to Watch',
+    playlistName: '',
   });
 
   const handleSubmit = async (e) => {
@@ -28,7 +29,8 @@ const AddMovieForm = ({ onMovieAdded }) => {
         director: '', 
         rating: 5, 
         comment: '', 
-        status: 'Plan to Watch' 
+        status: 'Plan to Watch',
+        playlistName: '',
       });
     } catch (err) {
       console.error(err);
@@ -86,6 +88,14 @@ const AddMovieForm = ({ onMovieAdded }) => {
         placeholder="Comment..." 
         value={formData.comment} 
         onChange={(e) => setFormData({...formData, comment: e.target.value})}
+      />
+
+      <input 
+        type="text" 
+        placeholder="Playlist (e.g., Animated Laughs)" 
+        value={formData.playlistName} 
+        onChange={(e) => setFormData({...formData, playlistName: e.target.value})} 
+        required 
       />
 
       <button type="submit">Add Movie</button>
