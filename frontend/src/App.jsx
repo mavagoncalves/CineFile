@@ -3,12 +3,15 @@ import axios from 'axios';
 import WatchlistTable from './components/WatchlistTable';
 import AddMovieForm from './components/AddMovieForm';
 import WatchlistStats from './components/WatchlistStats';
+import GenreFilter from './components/GenreFilter';
 import './App.css';
 
 function App() {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedGenre, setSelectedGenre] = useState('All');
+
 
   const fetchWatchlist = async () => {
     try {
@@ -34,6 +37,11 @@ function App() {
     return () => clearInterval(interval); // Cleanup
   }, []);
 
+  const availableGenres = [...new Set(movies.map(item => item.movie?.genre))].filter(Boolean);
+  const filteredMovies = selectedGenre === 'All' 
+    ? movies 
+    : movies.filter(item => item.movie?.genre === selectedGenre);
+  
   const handleDelete = async (id) => {
     if (window.confirm("Remove this movie from CineFile?")) {
       await axios.delete(`http://localhost:5000/api/watchlist/${id}`);
@@ -56,16 +64,24 @@ function App() {
 };
 
   return (
-    <div className="App" style={{ maxWidth: '800px', margin: '0 auto', padding: '20px' }}>
+    <div className="App">
       <h1>CineFile</h1>
+      
+      {error && <div className="error">{error}</div>}
+      
       <WatchlistStats movies={movies} />
       <AddMovieForm onMovieAdded={fetchWatchlist} />
       
-      {loading && <p>Loading...</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      
-      {!loading && (
-        <WatchlistTable movies={movies} onDelete={handleDelete} />
+      <GenreFilter 
+        genres={availableGenres} 
+        currentGenre={selectedGenre} 
+        onGenreChange={setSelectedGenre} 
+      />
+
+      {loading && movies.length === 0 ? (
+        <div className="loading">Curating your movies...</div>
+      ) : (
+        <WatchlistTable movies={filteredMovies} onDelete={handleDelete} />
       )}
     </div>
   );

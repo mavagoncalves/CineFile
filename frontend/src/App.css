@@ -164,3 +164,29 @@ td {
 
 td:first-child { border-radius: 12px 0 0 12px; font-weight: 600; font-size: 1.1rem; }
 td:last-child { border-radius: 0 12px 12px 0; }
+
+/* --- FILTER STYLING --- */
+.filter-container {
+  margin-bottom: 30px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background: var(--bg-card);
+  padding: 15px 20px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  max-width: fit-content;
+}
+
+.filter-container label {
+  color: var(--text-gray);
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.filter-container select {
+  cursor: pointer;
+  min-width: 150px;
+}
