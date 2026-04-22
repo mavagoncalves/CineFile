@@ -4,6 +4,7 @@ import WatchlistTable from './components/WatchlistTable';
 import AddMovieForm from './components/AddMovieForm';
 import WatchlistStats from './components/WatchlistStats';
 import GenreFilter from './components/GenreFilter';
+import PlaylistTabs from './components/PlaylistTabs';
 import './App.css';
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
   const [error, setError] = useState(null);
   const [selectedGenre, setSelectedGenre] = useState('All');
   const [enteredApp, setEnteredApp] = useState(false);
+  const [activePlaylist, setActivePlaylist] = useState('All');
 
 
   const fetchWatchlist = async () => {
@@ -38,10 +40,15 @@ function App() {
     return () => clearInterval(interval); // Cleanup
   }, []);
 
-  const availableGenres = [...new Set(movies.map(item => item.movie?.genre))].filter(Boolean);
-  const filteredMovies = selectedGenre === 'All' 
-    ? movies 
-    : movies.filter(item => item.movie?.genre === selectedGenre);
+ const availableGenres = [...new Set(movies.map(item => item.movie?.genre))].filter(Boolean);
+ const availablePlaylists = [...new Set(movies.map(item => item.playlistName))].filter(Boolean);
+
+ // applies BOTH the Playlist and Genre filters together
+  const displayMovies = movies.filter(item => {
+    const matchesPlaylist = activePlaylist === 'All' || item.playlistName === activePlaylist;
+    const matchesGenre = selectedGenre === 'All' || item.movie?.genre === selectedGenre;
+    return matchesPlaylist && matchesGenre;
+  });
   
   const handleDelete = async (id) => {
     if (window.confirm("Remove this movie from CineFile?")) {
@@ -85,11 +92,18 @@ if (!enteredApp) {
     <div className="App">
       <h1>CineFile</h1>
       
-      {error && <div className="error">{error}</div>}
+      {error && <div className="error" style={{ color: 'red', textAlign: 'center' }}>{error}</div>}
       
       <WatchlistStats movies={movies} />
+      
       <AddMovieForm onMovieAdded={fetchWatchlist} />
       
+      <PlaylistTabs 
+        playlists={availablePlaylists} 
+        activePlaylist={activePlaylist} 
+        onSelect={setActivePlaylist} 
+      />
+
       <GenreFilter 
         genres={availableGenres} 
         currentGenre={selectedGenre} 
@@ -97,9 +111,15 @@ if (!enteredApp) {
       />
 
       {loading && movies.length === 0 ? (
-        <div className="loading">Curating your movies...</div>
+        <div className="loading" style={{ textAlign: 'center', color: 'var(--text-gray)' }}>
+          Curating your movies...
+        </div>
       ) : (
-        <WatchlistTable movies={filteredMovies} onDelete={handleDelete} />
+        <WatchlistTable 
+          movies={displayMovies} 
+          onDelete={handleDelete} 
+          onUpdateRating={handleUpdateRating}
+        />
       )}
     </div>
   );
