@@ -19,3 +19,19 @@ exports.createMovie = async (req, res) => {
         res.status(400).json({ message: "Validation failed", error: error.message });
     }
 };
+
+// Search movies
+exports.searchMovies = async (req, res) => {
+    try {
+        const { q } = req.query;
+        if (!q || q.length < 2) return res.json([]); // Only search if 2+ characters
+
+        const movies = await Movie.find({ 
+            title: { $regex: q, $options: 'i' } 
+        }).limit(5); // Only return top 5 matches
+
+        res.json(movies);
+    } catch (err) {
+        res.status(500).json({ message: "Search failed" });
+    }
+};
